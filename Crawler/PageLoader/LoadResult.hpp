@@ -1,7 +1,9 @@
 #ifndef LOAD_RESULT_H
 #define LOAD_RESULT_H
 
+#include <iostream>
 #include <string>
+#include <memory>
 
 class LoadResult
 {
@@ -9,7 +11,7 @@ private:
     /**
      * stores the response body 
     */
-    std::string body;
+    std::shared_ptr<std::string> body;
 
     /**
      * stores the response status
@@ -17,8 +19,9 @@ private:
     int status;
 
 public:
-    LoadResult(const std::string body, int status);
-    std::string getBody();
+    LoadResult();
+    LoadResult(std::shared_ptr<std::string> body, int status);
+    std::shared_ptr<std::string> getBody();
     int getStatus();
 };
 

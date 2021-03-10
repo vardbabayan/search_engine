@@ -1,7 +1,14 @@
 #include "PageLoader/PageLoader.cpp"
+#include "HTMLParser/ConstructHTMLTree.cpp"
 
 int main()
 {
-    PageLoader t;
-    t.loadURL("https://google.com");
+    PageLoader t; 
+    LoadResult url = t.loadURL("https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html");
+    
+    std::cout << *url.getBody().get();
+
+    // ConstructHTMLTree tree(url.getBody());
+    // GumboNode node = tree.getNode();
+    // tree.searchAllLinks(url.getBody());
 }
