@@ -18,7 +18,6 @@ void ConstructHTMLTree::extractLinks(GumboNode* node)
         {
             extractLinks(static_cast<GumboNode*>(children->data[i]));
         }
-        
     }
 
     GumboAttribute* href = gumbo_get_attribute(&node->v.element.attributes, "href");

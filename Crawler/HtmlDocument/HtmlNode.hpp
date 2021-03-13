@@ -1,3 +1,6 @@
+#ifndef Html_Node
+#define Html_Node
+
 #include <gumbo.h>
 
 class HtmlNode
@@ -8,3 +11,5 @@ public:
     HtmlNode(GumboNode* node);
     virtual bool isElement();
 };
+
+#endif

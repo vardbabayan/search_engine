@@ -1,8 +1,9 @@
+#ifndef Html_Document
+#define Html_Document
 
-#include <string>
-#include <functional>
 
 #include "HtmlElement.hpp"
+#include <functional>
 #include "gumbo.h"
 
 class HtmlDocument 
@@ -13,24 +14,11 @@ private:
 public:
     HtmlDocument(const std::string& url);
     bool parse();
-    void visitElements(std::function<void(HtmlElement)> visitor)
-    {
-        this->visitElement(output->root, visitor);
-    }
 
-    void visitElement(GumboNode* node, std::function<void(HtmlElement)> visitor)
-    {
-        if(node->type != GUMBO_NODE_ELEMENT)
-        {
-            return;
-        }
+    // call it to visit all vertexes
+    void visitElements(std::function<void(HtmlElement)> visitor);
 
-        visitor(HtmlElement(node));
-
-        GumboVector* children = &node->v.element.children;
-        for (unsigned int i = 0; i < children->length; ++i) 
-        {
-            visitElement(static_cast<GumboNode*>(children->data[i]), visitor);
-        }
-    }
+    void visitElement(GumboNode* node, std::function<void(HtmlElement)> visitor);
 };
+
+#endif
