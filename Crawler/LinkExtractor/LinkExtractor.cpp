@@ -1,5 +1,6 @@
 #include "LinkExtractor.hpp"
 
+// Extract all links from current URL and contain them in vector
 std::vector<std::string> LinkExtractor::extract(HtmlDocument& doc)
 {
     std::vector<std::string> links;
