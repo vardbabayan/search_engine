@@ -20,8 +20,13 @@ private:
 
 public:
     LoadResult();
+    
     LoadResult(std::shared_ptr<std::string> body, int status);
+
+    // return html code represented in string
     std::shared_ptr<std::string> getBody();
+
+    // return responce status 
     int getStatus();
 };
 
