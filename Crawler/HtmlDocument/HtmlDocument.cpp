@@ -6,8 +6,7 @@ HtmlDocument::HtmlDocument(const std::string& url) : url{url}
 
 bool HtmlDocument::parse()
 {
-    HtmlElement elem(output->root);
-    
+    this->output = gumbo_parse(this->url.c_str());
 }
 
 void HtmlDocument::visitElements(std::function<void(HtmlElement)> visitor)
@@ -29,4 +28,9 @@ void HtmlDocument::visitElement(GumboNode* node, std::function<void(HtmlElement)
     {
         visitElement(static_cast<GumboNode*>(children->data[i]), visitor);
     }
+}
+
+HtmlDocument::~HtmlDocument()
+{
+    gumbo_destroy_output(&kGumboDefaultOptions, this->output);    
 }
