@@ -3,7 +3,8 @@
 std::vector<std::string> LinkExtractor::extract(HtmlDocument& doc)
 {
     std::vector<std::string> links;
-    doc.visitElements([&links](HtmlElement elem){ 
+    doc.visitElements([&links](HtmlElement elem)
+    { 
         if(!elem.isTagA())
         {
             return;
@@ -13,4 +14,6 @@ std::vector<std::string> LinkExtractor::extract(HtmlDocument& doc)
         if(href.size() > 0)
             links.push_back(href);
     });
+
+    return links;
 }

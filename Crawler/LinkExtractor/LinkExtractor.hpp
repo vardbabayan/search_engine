@@ -2,7 +2,6 @@
 #define Link_Extractor
 
 #include "HtmlDocument/HtmlDocument.hpp"
-
 #include <vector>
 
 class LinkExtractor
