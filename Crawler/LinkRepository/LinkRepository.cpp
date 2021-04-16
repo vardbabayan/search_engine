@@ -1,36 +1,53 @@
 #include "LinkRepository.hpp"
 
-// Push to vector and return all Links 
-std::vector<LinkEntry> LinkRepository::getAll()
-{
-    std::vector<LinkEntry> links;
-    for(const auto& tempLink : source)
-        links.push_back(tempLink.second);
 
-    return links;
+std::vector<LinkEntry> LinkRepository::getAll() const
+{
+    return source;
 }
 
-// return Link id if it exist in source
-LinkEntry LinkRepository::getById(int id)
+std::vector<LinkEntry> LinkRepository::getBy(const std::string& domain, LinkStatus status, int count) const
 {
-    auto link = source.find(id);
-    if(link != source.end())
+    std::vector<LinkEntry> domainSrc;
+    int counter = 0;
+    for(const auto& link : source)
     {
-        return link->second;
+        if(counter == count)
+            break;
+
+        if(link.domain == domain && link.status == status)
+        {
+            domainSrc.push_back(link);
+            ++counter;
+        }
     }
 
-    return LinkEntry();
+    return domainSrc;
 }
 
-// to save here Link or Update if Link isCrawled
+std::optional<LinkEntry> LinkRepository::getByUrl(const std::string& url) const
+{
+    for(const auto& link : source)
+    {
+        if(link.url == url)
+        {
+            return std::make_optional(link);
+        }
+    }
+
+    return {};
+}
+
 void LinkRepository::save(LinkEntry entry)
 {
-    if(entry.isCrawle)
+    for(int i = 0; i < source.size(); ++i)
     {
-        source[entry.id] = entry;        
+        if(source[i].url == entry.url)
+        {
+            source[i] = entry;
+            return;
+        }
     }
-    else
-    {
-        source.insert(std::make_pair(entry.id, entry));
-    }
+
+    source.push_back(entry);
 }
