@@ -1,5 +1,5 @@
-#ifndef Html_Element
-#define Html_Element
+#ifndef HTML_ELEMENT
+#define HTML_ELEMENT
 
 #include "HtmlNode.hpp"
 
@@ -10,14 +10,40 @@ class HtmlElement : HtmlNode
 public:
     HtmlElement(GumboNode* node);
 
-    // always true
+    /**
+     * always true
+     */
     bool isElement() override;
 
-    // check is <a> or not
+    /**
+     * check is <a> or not
+     */
     bool isTagA() const;
 
-    // if tag contains attribute then take it
+    /**
+     * check tags for text
+     */
+    bool isTagsForText() const;
+
+    /**
+     * check is tag <title> or not
+     */
+    bool isTagTitle() const;
+
+    /**
+     * check is tag <meta> or not
+     */
+    bool isTagForDescription() const;
+
+    /**
+     * if tag contains attribute then take it
+     */
     std::string getAttribute(const std::string& name);
+
+    /**
+     * get text from current element
+     */
+    std::string getInnerText();
 };
 
 #endif

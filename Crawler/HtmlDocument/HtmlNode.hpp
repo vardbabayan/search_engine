@@ -1,5 +1,5 @@
-#ifndef Html_Node
-#define Html_Node
+#ifndef HTML_NODE
+#define HTML_NODE
 
 #include <gumbo.h>
 

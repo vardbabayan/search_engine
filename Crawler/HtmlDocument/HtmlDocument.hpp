@@ -1,6 +1,5 @@
-#ifndef Html_Document
-#define Html_Document
-
+#ifndef HTML_DOCUMENT
+#define HTML_DOCUMENT
 
 #include "HtmlElement.hpp"
 #include <functional>
@@ -17,7 +16,7 @@ private:
     /**
      * Document for current url
      */  
-    std::string url;
+    std::string html;
 
     /**
      * Visit all Nodes in tree from root
@@ -25,7 +24,7 @@ private:
     void visitElement(GumboNode* node, std::function<void(HtmlElement)> visitor);
 
 public:
-    HtmlDocument(const std::string& url);
+    HtmlDocument(const std::string& html);
 
     // parse html to tree
     bool parse();

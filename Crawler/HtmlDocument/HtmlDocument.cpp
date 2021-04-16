@@ -1,12 +1,15 @@
 #include "HtmlDocument.hpp"
 
-HtmlDocument::HtmlDocument(const std::string& url) : url{url}
+HtmlDocument::HtmlDocument(const std::string& html)
 {
+    this->output = nullptr;
+    this->html = html;
 }
 
 bool HtmlDocument::parse()
 {
-    this->output = gumbo_parse(this->url.c_str());
+    this->output = gumbo_parse(this->html.c_str());
+    return true;
 }
 
 void HtmlDocument::visitElements(std::function<void(HtmlElement)> visitor)
@@ -32,5 +35,8 @@ void HtmlDocument::visitElement(GumboNode* node, std::function<void(HtmlElement)
 
 HtmlDocument::~HtmlDocument()
 {
-    gumbo_destroy_output(&kGumboDefaultOptions, this->output);    
+    if(this->output != nullptr) 
+    {
+        gumbo_destroy_output(&kGumboDefaultOptions, this->output);    
+    }
 }

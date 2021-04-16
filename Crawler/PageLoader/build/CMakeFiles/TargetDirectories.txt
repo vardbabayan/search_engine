@@ -1,3 +1,0 @@
-/home/vartandev/git/search_engine/Crawler/PageLoader/build/CMakeFiles/rebuild_cache.dir
-/home/vartandev/git/search_engine/Crawler/PageLoader/build/CMakeFiles/edit_cache.dir
-/home/vartandev/git/search_engine/Crawler/PageLoader/build/CMakeFiles/page_loader.dir

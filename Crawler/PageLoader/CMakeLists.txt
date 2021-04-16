@@ -1,9 +1,13 @@
+project(PageLoader)
+
 add_library( 
-    page_loader STATIC
+    PageLoader SHARED
+    
     LoadResult.hpp
     LoadResult.cpp
+
     PageLoader.hpp
     PageLoader.cpp
 )
 
-target_link_libraries(page_loader)
+target_link_libraries(PageLoader -lcurl)

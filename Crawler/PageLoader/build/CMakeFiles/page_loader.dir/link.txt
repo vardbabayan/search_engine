@@ -1,2 +1,0 @@
-/usr/bin/ar qc libpage_loader.a  CMakeFiles/page_loader.dir/LoadResult.cpp.o CMakeFiles/page_loader.dir/PageLoader.cpp.o
-/usr/bin/ranlib libpage_loader.a
