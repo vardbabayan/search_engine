@@ -2,7 +2,6 @@
 #define LINK_ENTRY
 
 #include <ctime>
-#include <chrono>
 #include <string>
 #include "LinkStatus.hpp"
 
@@ -21,8 +20,7 @@ public:
     std::string getUrl();
     std::string getDomain();
     LinkStatus getStatus();
-    std::time_t getCreatedTime();
-    std::time_t getLastLoadedTime();
+    std::time_t getLastUpdatedTime();
 };
 
 #endif

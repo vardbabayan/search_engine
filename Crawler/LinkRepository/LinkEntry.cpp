@@ -25,7 +25,7 @@ LinkStatus LinkEntry::getStatus()
     return status;
 }
 
-std::time_t LinkEntry::getLastLoadedTime()
+std::time_t LinkEntry::getLastUpdatedTime()
 {
     return lastUpdate;
 }
