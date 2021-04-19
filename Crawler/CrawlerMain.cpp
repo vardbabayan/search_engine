@@ -1,24 +1,31 @@
 #include "PageLoader/PageLoader.hpp"
 #include "HtmlDocument/HtmlDocument.hpp"
+
 #include "DocumentExtractor/DocumentExtractor.hpp"
+#include "DocumentRepository/DocumentRepository.hpp"
+
 #include "LinkExtractor/LinkExtractor.hpp"
 #include "LinkRepository/LinkRepository.hpp"
-#include "WebRepository/WebRepository.hpp"
 #include "LinkRepository/LinkStatus.hpp"
+
+#include "WebRepository/WebRepository.hpp"
 
 int main()
 {
+    std::time_t currentTime{};
+    
     WebRepository webrep;
-    webrep.save(WebSite("rau.am", "https://rau.am/", time(nullptr)));
+    webrep.save(WebSite("rau.am", "https://rau.am/", time(&currentTime)));
 
     LinkRepository linkrep;
+    DocumentRepository docrep;
     PageLoader pageLoader;
     LinkExtractor linkExtractor;
     DocumentExtractor docExtractor;
 
     for(auto& website : webrep.getAll())
     {
-        linkrep.save(LinkEntry(website.getHomePage(), website.getDomain(), LinkStatus::WAITING, time(nullptr)));
+        linkrep.save(LinkEntry(website.getHomePage(), website.getDomain(), LinkStatus::WAITING, time(&currentTime)));
 
         while(true)
         {
@@ -35,9 +42,10 @@ int main()
             for(auto& link : links)
             {
                 auto loadResult = pageLoader.loadURL(link.getUrl());
+                
                 if(loadResult.getStatus() < 200 || loadResult.getStatus() >= 300)
                 {
-                    linkrep.save(LinkEntry(link.getUrl(), link.getDomain(), LinkStatus::ERROR, time(nullptr)));
+                    linkrep.save(LinkEntry(link.getUrl(), link.getDomain(), LinkStatus::ERROR, time(&currentTime)));
                     continue;
                 }
 
@@ -55,20 +63,22 @@ int main()
                         continue;
                     }
 
-                    linkrep.save(LinkEntry(newLink, website.getDomain(), LinkStatus::WAITING, time(nullptr)));
+                    linkrep.save(LinkEntry(newLink, website.getDomain(), LinkStatus::WAITING, time(&currentTime)));
                 }
 
-                //auto docInfo = docExtractor.extractInfo(doc);
-                // save doc into Document Repository
-                // docrep.save(Document(link.getUrl(), docInfo.getTitle(), docInfo.getText(), docInfo.getDescription() time(nullptr)));
+                auto docInfo = docExtractor.extractInfo(doc);
+                docrep.save(Document(link.getUrl(), docInfo.getTitle(), docInfo.getText(), docInfo.getDescription(), time(&currentTime)));
 
-                linkrep.save(LinkEntry(link.getUrl(), link.getDomain(), LinkStatus::SUCCESS, time(nullptr)));
+                std::cout << "Title: " << docInfo.getTitle() << "\n Description: " << docInfo.getDescription() << "\n" 
+                          << "Text: " << docInfo.getText() << "\n";
+
+                linkrep.save(LinkEntry(link.getUrl(), link.getDomain(), LinkStatus::SUCCESS, time(&currentTime)));
             }
             std::cout << "links: " << linkrep.getCounter() << " " << "\n";
             
         }
 
-        webrep.save(WebSite(website.getDomain(), website.getHomePage(), time(nullptr)));
+        webrep.save(WebSite(website.getDomain(), website.getHomePage(), time(&currentTime)));
     }
 
     std::cout << "\nSuccessfully finished all \n";
