@@ -15,9 +15,9 @@ private:
 public:
     WebSite(const std::string& domain, const std::string& homePage, std::time_t time);
 
-    std::string getDomain();
-    std::string getHomePage();
-    std::time_t getLastCrawleTime();
+    std::string getDomain() const;
+    std::string getHomePage() const;
+    std::time_t getLastCrawleTime() const;
 };
 
 #endif

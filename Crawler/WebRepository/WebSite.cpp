@@ -5,17 +5,17 @@ WebSite::WebSite(const std::string& domain, const std::string& homePage, std::ti
 {
 }
 
-std::string WebSite::getDomain()
+std::string WebSite::getDomain() const
 {
     return domain;
 }
 
-std::string WebSite::getHomePage()
+std::string WebSite::getHomePage() const
 {
     return homePage;
 }
 
-std::time_t WebSite::getLastCrawleTime()
+std::time_t WebSite::getLastCrawleTime() const
 {
     return lastCrawleTime;
 }
