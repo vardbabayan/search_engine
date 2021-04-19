@@ -1,3 +1,4 @@
+ 
 #include "DocumentInfo.hpp"
 
 DocumentInfo::DocumentInfo()  : title{}, description{}, text{}
