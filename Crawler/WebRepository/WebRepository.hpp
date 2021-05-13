@@ -1,19 +1,22 @@
 #ifndef WEB_REPOSITORY
 #define WEB_REPOSITORY
 
-#include "WebSite.hpp"
+#include "../MysqlConnector/MysqlConnector.hpp"
+#include "Website.hpp"
 
 #include <vector>
 
 class WebRepository
 {
 private:
-    std::vector<WebSite> source;
+    MysqlConnector* connector;
+    std::vector<Website> source;
 
 public:
-    std::vector<WebSite> getAll() const;
+    WebRepository(MysqlConnector* obj);
+    std::vector<Website> getAll() const;
 
-    void save(const WebSite& website);
+    void save(const Website& website);
 };
 
 #endif

@@ -6,8 +6,8 @@ add_library(
     WebRepository.hpp
     WebRepository.cpp
 
-    WebSite.hpp
-    WebSite.cpp
+    Website.hpp
+    Website.cpp
 )
 
 target_link_libraries(WebRepository)
