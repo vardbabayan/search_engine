@@ -7,6 +7,7 @@
 class Document
 {
 private:
+    int id;
     std::string url;
     std::string title;
     std::string description;
@@ -16,6 +17,7 @@ private:
 public:
     Document();
     Document(const std::string& url, const std::string& title, const std::string& description, const std::string& text, const std::time_t& time);
+    Document(int id, const std::string& url, const std::string& title, const std::string& description, const std::string& text, const std::time_t& time);
 
     std::string getUrl() const;
     std::string getTitle() const;

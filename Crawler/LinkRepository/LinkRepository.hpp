@@ -1,16 +1,21 @@
 #ifndef LINK_REPOSITORY
 #define LINK_REPOSITORY
 
+#include <mysql/mysql.h>
+#include "../MysqlConnector/MysqlConnector.hpp"
 #include "LinkEntry.hpp"
 #include <vector>
+#include <string>
 #include <optional>
 
 class LinkRepository
 {
 private:
+    MysqlConnector* connector;
     std::vector<LinkEntry> source;
 public:
-
+    LinkRepository(MysqlConnector* obj);
+    
     /**
     * Push to vector and return all Links 
     */
@@ -19,7 +24,7 @@ public:
     /**
      * return Link by domain if it exists in source
      */
-    std::vector<LinkEntry> getBy(const std::string& domain, LinkStatus status, int count) const;
+    std::vector<LinkEntry> getBy(int websiteId, int status, int count) const;
     
     /**
      * to save here Link or Update if Link isCrawled

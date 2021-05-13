@@ -1,12 +1,23 @@
 #include "LinkEntry.hpp"
 
 LinkEntry::LinkEntry()
-    : url{}, domain{}, status{}, lastUpdate{}
+    : id{}, url{}, websiteId{}, status{}, lastUpdate{}
 {
 }
 
-LinkEntry::LinkEntry(std::string url, std::string domain, LinkStatus status, std::time_t lastUpdate) 
-    : url{url}, domain{domain}, status{status}, lastUpdate{lastUpdate}
+
+LinkEntry::LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate)
+    : url{url}, status{status}, lastUpdate{lastUpdate}
+{
+}
+
+LinkEntry:: LinkEntry(int id, const std::string& url, int status, const std::time_t& lastUpdate) 
+    : url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
+{
+}
+
+LinkEntry::LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
+    : id{id}, url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
 {
 }
 
@@ -15,12 +26,12 @@ std::string LinkEntry::getUrl()
     return url;
 }
 
-std::string LinkEntry::getDomain()
+int LinkEntry::getWebsiteId()
 {
-    return domain;
+    return websiteId;
 }
 
-LinkStatus LinkEntry::getStatus()
+int LinkEntry::getStatus()
 {
     return status;
 }

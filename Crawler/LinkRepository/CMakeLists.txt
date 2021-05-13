@@ -12,4 +12,4 @@ add_library(
     LinkStatus.hpp
 )
 
-target_link_libraries(LinkRepository)
+target_link_libraries(LinkRepository (mysql_config --cflags), (mysql_config --libs))

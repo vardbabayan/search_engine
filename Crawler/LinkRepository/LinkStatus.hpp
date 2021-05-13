@@ -3,9 +3,9 @@
 
 enum class LinkStatus
 {
-    WAITING,
-    SUCCESS,
-    ERROR
+    WAITING = 0,
+    SUCCESS = 1,
+    ERROR = 2
 };
 
 #endif
