@@ -52,9 +52,9 @@ set_target_properties(DocumentExtractor PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DocumentExtractor/libDocumentExtractor.so"
 )
 
-# set_target_properties(MysqlConnector PROPERTIES
-#   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MysqlConnector/libMysqlConnector.so"
-# )
+set_target_properties(MysqlConnector PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MysqlConnector/libMysqlConnector.so"
+)
 
 target_link_libraries(${PROJECT_NAME} PageLoader HtmlDocument LinkExtractor LinkRepository 
                                       WebRepository DocumentExtractor DocumentRepository)

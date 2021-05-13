@@ -9,4 +9,4 @@ add_library(
     MysqlConnector.cpp
 )
 
-target_link_libraries(MysqlConnector mysql_config --cflags, mysql_config --libs)
+target_link_libraries(MysqlConnector `mysql_config --cflags --libs`)
