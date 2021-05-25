@@ -7,4 +7,4 @@ add_library(
     LinkExtractor.cpp
 )
 
-target_link_libraries(LinkExtractor)
+target_link_libraries(LinkExtractor -lboost_regex)
