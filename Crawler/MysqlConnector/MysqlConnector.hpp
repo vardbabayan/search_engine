@@ -2,10 +2,12 @@
 #define MYSQL_CONNECTOR
 
 #include <mysql/mysql.h>
+#include <iostream>
 #include <functional>
 #include <optional>
 
-class MysqlConnector {
+class MysqlConnector 
+{
 private:
     const char* host;
     const char* username;
@@ -34,7 +36,6 @@ public:
         }
 
         std::optional<T> result = function(mysql);
-
         mysql_close(mysql);
 
         return result;

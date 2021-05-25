@@ -9,4 +9,5 @@ add_library(
     MysqlConnector.cpp
 )
 
-target_link_libraries(MysqlConnector `mysql_config --cflags --libs`)
+target_link_libraries(MysqlConnector -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -ldl -lresolv)
+target_compile_options(MysqlConnector PUBLIC -L/usr/lib/x86_64-linux-gnu)
