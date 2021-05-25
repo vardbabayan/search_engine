@@ -15,8 +15,9 @@ private:
 
 public:
     Website();
-    Website(const std::string& domain, const std::string& homePage, std::time_t time);
-    Website(int id, const std::string& domain, const std::string& homePage, std::time_t time);
+    Website(const std::string& domain, const std::string& homepage);
+    Website(const std::string& domain, const std::string& homepage, std::time_t time);
+    Website(int id, const std::string& domain, const std::string& homepage);
     
     int getId() const;
     std::string getDomain() const;

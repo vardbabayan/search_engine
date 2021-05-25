@@ -3,6 +3,7 @@
 
 #include "../MysqlConnector/MysqlConnector.hpp"
 #include "Website.hpp"
+#include <iostream>
 
 #include <vector>
 
