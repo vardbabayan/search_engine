@@ -36,6 +36,10 @@ set_target_properties(LinkExtractor PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/LinkExtractor/libLinkExtractor.so"
 )
 
+set_target_properties(MysqlConnector PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MysqlConnector/libMysqlConnector.so"
+)
+
 set_target_properties(LinkRepository PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/LinkRepository/libLinkRepository.so"
 )
@@ -52,9 +56,8 @@ set_target_properties(DocumentExtractor PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DocumentExtractor/libDocumentExtractor.so"
 )
 
-set_target_properties(MysqlConnector PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MysqlConnector/libMysqlConnector.so"
-)
+# target_link_libraries("lib" -lmysqlclient -lmysqlpp)
+# target_compile_options("lib" PUBLIC -I/usr/include/mysql)
 
-target_link_libraries(${PROJECT_NAME} PageLoader HtmlDocument LinkExtractor LinkRepository 
+target_link_libraries(${PROJECT_NAME} PageLoader HtmlDocument LinkExtractor MysqlConnector LinkRepository 
                                       WebRepository DocumentExtractor DocumentRepository)
