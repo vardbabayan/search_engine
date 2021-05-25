@@ -13,40 +13,42 @@ std::vector<Document> DocumentRepository::getAll() const
         MYSQL_ROW row;
         std::vector<Document>  result;
 
-        std::string query = "select * from Documents";
+        std::string query = "SELECT * FROM Documents";
         mysql_query(mysql, query.c_str());
 
         res = mysql_store_result(mysql);
         if(!res)
         {
-            return std::make_optional<std::vector<Document> >(NULL);
+            std::cout << "result error \n";
+            return std::make_optional<std::vector<Document> >();
         }
         
         while(row = mysql_fetch_row(res))
         {
-            unsigned int id = int(*row[0] - '0');
+            size_t id = std::stoi(row[0]);
             std::string url = row[1];
             std::string title = row[2];
             std::string description = row[3];
             std::string text = row[4];
-            std::time_t time = std::time_t(row[5]);
             
-            result.push_back(Document(id, url, title, description, text, time));
+            result.push_back(Document(id, url, title, description, text));
         }
 
         mysql_free_result(res);
-
         return std::make_optional(result);
     });
 
     if(all.has_value())
     {
+        std::vector<Document> res = all.value();
+        for(int i = 0; i < res.size(); ++i)
+        {
+            std::cout << "DOC FROM: " << res[i].getUrl() << "\n";
+        }
         return all.value();
     }
 
-    return std::vector<Document>();
-
-    // return docSource;
+    return {};
 }
 
 std::optional<Document> DocumentRepository::getByUrl(const std::string& url) const
@@ -57,12 +59,13 @@ std::optional<Document> DocumentRepository::getByUrl(const std::string& url) con
         MYSQL_ROW row;
         std::vector<Document> doc;
 
-        std::string query = "select * from Documents where url=" + url;
+        std::string query = "SELECT * FROM Documents WHERE url='" + url + "'";
         mysql_query(mysql, query.c_str());
 
         res = mysql_store_result(mysql);
         if(!res)
         {
+            std::cout << "result error \n";
             return std::make_optional(Document());
         }
         
@@ -70,44 +73,80 @@ std::optional<Document> DocumentRepository::getByUrl(const std::string& url) con
         {
             if(row[1] == url)
             {
-                unsigned int id = int(*row[0] - '0');
+                size_t id = std::stoi(row[0]);
                 std::string url = row[1];
                 std::string title = row[2];
                 std::string description = row[3];
                 std::string text = row[4];
-                std::time_t time = std::time_t(row[5]);
 
-                return std::make_optional(Document(id, url, title, description, text, time));
+                return std::make_optional(Document(id, url, title, description, text));
             }
         }
 
         mysql_free_result(res);
+        std::cout << "DOCREP in getAll with query: " << query << "\n";
         return std::make_optional(Document());
     });
 
-    return doc;
+    if(doc.has_value())
+        return doc;
 
-    
-    // std::vector<Document> docRep;
-    // for(const auto& doc : docSource)
-    // {
-    //     if(doc.getUrl() == url)
-    //         docRep.push_back(doc);
-    // }
-
-    // return docRep;
+    return {};
 }
 
  void DocumentRepository::save(const Document& doc)
  {
-     for(int i = 0; i < docSource.size(); ++i)
+     connector->connect<void*>([&doc](MYSQL* mysql)
      {
-         if(docSource[i].getUrl() == doc.getUrl())
-         {
-            docSource[i] = doc;
-            return;
-         }
-     }
+        MYSQL_RES* res;
+        MYSQL_ROW row;
+        
+        std::string query = "SELECT * FROM Documents";
+        mysql_query(mysql, query.c_str());
+        
+        res = mysql_store_result(mysql);
+        if(!res)
+        {
+            std::cout << "result error \n";
+            return nullptr;
+        }
+        
+        bool find = false;
+        while(row = mysql_fetch_row(res))
+        {
+            size_t id = std::stoi(row[0]);
+            std::string url = row[1];
+    
+            if(url == doc.getUrl())
+            {
+                find = true;
+                std::cout << "found link in db with id: " << id << " " << url << "\n";
+                break;
+            }
+        }
 
-     docSource.push_back(doc);
+        std::string tmpquery;
+        if(find)
+        {
+            tmpquery = "UPDATE Documents SET `description`='" + doc.getDescription() + "', title='" 
+                        + doc.getTitle()+ "', `text`='" + doc.getText() + "'" + " WHERE url='" + doc.getUrl() + "'";
+        }
+        else
+        {
+            tmpquery = "INSERT INTO Documents(url, `description`, title, `text`) VALUES ( '" + doc.getUrl() +"'"
+                        + ", '" + doc.getDescription() + "', '" + doc.getTitle() + "', '" + doc.getText() + "' )";
+        }
+
+        mysql_query(mysql, tmpquery.c_str());
+
+        std::string err = mysql_error(mysql);
+        if(err.size() > 0)
+        {
+            std::cout  << "In DOCREP ERROR: " << err << "\n";
+            //std::cout << "WITH QUERY: " << tmpquery << "\n";
+        }
+
+        mysql_free_result(res);
+        return nullptr;
+     });
  }

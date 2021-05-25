@@ -4,6 +4,7 @@
 #include "../MysqlConnector/MysqlConnector.hpp"
 #include "Document.hpp"
 
+#include <mysql/mysql.h>
 #include <vector>
 
 class DocumentRepository

@@ -35,19 +35,19 @@ std::vector<Website> WebRepository::getAll() const
         }
 
         mysql_free_result(res);
-        std::cout << "WEBREP in getAll with query: " << query << "\n";
+        //std::cout << "WEBREP in getAll with query: " << query << "\n";
 
         return std::make_optional(result);
     });
 
     if(all.has_value())
     {
-        std::cout << "HAS VALUE\n";
-        std::vector<Website> res = all.value();
-        for(int i = 0; i < res.size(); ++i)
-        {
-            std::cout << res[i].getDomain() << " " << res[i].getId() << "\n";
-        }
+        // std::cout << "HAS VALUE\n";
+        //std::vector<Website> res = all.value();
+        // for(int i = 0; i < res.size(); ++i)
+        // {
+        //     std::cout << res[i].getDomain() << " " << res[i].getId() << "\n";
+        // }
 
         return all.value();
     }
@@ -108,7 +108,7 @@ void WebRepository::save(const Website& website)
             std::cout << "ERROR IN WEBREP: " << str << "\n";
         }
         
-       std::cout << "SAVED INTO WEBREP USING THIS QUERY: " << tmpquery << "\n";
+       //std::cout << "SAVED INTO WEBREP USING THIS QUERY: " << tmpquery << "\n";
             
        mysql_free_result(res);
        return nullptr;

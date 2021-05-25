@@ -16,9 +16,14 @@ private:
 
 public:
     Document();
-    Document(const std::string& url, const std::string& title, const std::string& description, const std::string& text, const std::time_t& time);
-    Document(int id, const std::string& url, const std::string& title, const std::string& description, const std::string& text, const std::time_t& time);
+    
+    Document(const std::string& url, const std::string& title, 
+            const std::string& description, const std::string& text);
 
+    Document(int id, const std::string& url, const std::string& title, 
+            const std::string& description, const std::string& text);
+
+    int getId() const;
     std::string getUrl() const;
     std::string getTitle() const;
     std::string getDescription() const;

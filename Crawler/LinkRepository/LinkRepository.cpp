@@ -86,10 +86,10 @@ std::vector<LinkEntry> LinkRepository::getBy(int websiteId, int status, int coun
     if(allBy.has_value())
     {
         std::vector<LinkEntry> res = allBy.value();
-        for(int i = 0; i < res.size(); ++i)
-        {
-            std::cout << res[i].getUrl() << "\n";
-        }
+        // for(int i = 0; i < res.size(); ++i)
+        // {
+        //     std::cout << res[i].getUrl() << "\n";
+        // }
         return allBy.value();
     }
 
@@ -184,7 +184,7 @@ void LinkRepository::save(LinkEntry entry)
             std::cout  << "In LINKREP ERROR: " << err << "\n";
         }
 
-        std::cout << "LINKREP IN save with query: " << query <<  "\n" << tmpquery << "\n";
+        //std::cout << "LINKREP IN save with query: " << query <<  "\n" << tmpquery << "\n";
         
         mysql_free_result(res);
         return nullptr;
