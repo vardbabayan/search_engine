@@ -14,7 +14,7 @@ public:
     PageLoader() = default;
 
     // load html code for current url
-    LoadResult loadURL(const std::string url);
+    LoadResult loadURL(const std::string& url);
 };
 
 #endif

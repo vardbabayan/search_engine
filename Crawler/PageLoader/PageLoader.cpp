@@ -11,13 +11,10 @@ size_t PageLoader::writeFunction(char *ptr, size_t size, size_t nmemb, void* dat
     return size * nmemb;
 }
 
-LoadResult PageLoader::loadURL(const std::string url)
+LoadResult PageLoader::loadURL(const std::string& url)
 {
     CURL* curl = curl_easy_init();
     CURLcode result;
-
-    std::string* response_body = new std::string;
-    long response_status;
 
     if(!curl)
     {
@@ -25,9 +22,12 @@ LoadResult PageLoader::loadURL(const std::string url)
         return LoadResult(nullptr, false);
     }
 
+    std::string* response_body = new std::string;
+    long response_status;
+
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-    curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 4);
+    curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 1);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)response_body);
     
@@ -42,5 +42,6 @@ LoadResult PageLoader::loadURL(const std::string url)
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_status);
     curl_easy_cleanup(curl);
 
+    std::cout << "status: " << response_status << "\n";
     return LoadResult(std::shared_ptr<std::string>(response_body), response_status);
 }
