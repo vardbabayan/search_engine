@@ -14,7 +14,7 @@ public:
     // extract all links from current Document
     std::vector<std::string> extract(HtmlDocument& doc);
 
-    void checkByDomain(std::vector<std::string>& links, const std::string& domain);
+    std::vector<std::pair<std::string, std::string> > checkByDomain(std::vector<std::string>& links, const std::string& domain);
 };
 
 #endif

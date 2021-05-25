@@ -19,8 +19,9 @@ std::vector<std::string> LinkExtractor::extract(HtmlDocument& doc)
     return links;
 }
 
-void LinkExtractor::checkByDomain(std::vector<std::string>& links, const std::string& domain)
+std::vector<std::pair<std::string, std::string> > LinkExtractor::checkByDomain(std::vector<std::string>& links, const std::string& domain)
 {
+    std::vector<std::pair<std::string, std::string> >  newDomains;
     for(auto& link : links)
     { 
         boost::regex ex("(http|https)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
@@ -38,6 +39,7 @@ void LinkExtractor::checkByDomain(std::vector<std::string>& links, const std::st
 
             if(currentDomain != domain)
             {                
+                newDomains.push_back(std::make_pair(domain, link));
                 std::cout << "[" << link << "]" << std::endl;
                 std::cout << currentDomain << std::endl;
                 std::remove(links.begin(), links.end(), link);
@@ -49,4 +51,5 @@ void LinkExtractor::checkByDomain(std::vector<std::string>& links, const std::st
             // std::cout << query << std::endl;
         }
     }
+    return newDomains;
 }
