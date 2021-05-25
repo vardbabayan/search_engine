@@ -5,38 +5,53 @@ LinkEntry::LinkEntry()
 {
 }
 
-
-LinkEntry::LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate)
-    : url{url}, status{status}, lastUpdate{lastUpdate}
+LinkEntry::~LinkEntry()
 {
 }
 
-LinkEntry:: LinkEntry(int id, const std::string& url, int status, const std::time_t& lastUpdate) 
-    : url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
+
+LinkEntry::LinkEntry(const std::string& url, size_t websiteId, size_t status)
+    : url{url}, websiteId{websiteId}, status{status}
 {
 }
 
-LinkEntry::LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
-    : id{id}, url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
+size_t LinkEntry::getId() const
 {
+    return id;
 }
 
-std::string LinkEntry::getUrl()
+std::string LinkEntry::getUrl() const
 {
     return url;
 }
 
-int LinkEntry::getWebsiteId()
+size_t LinkEntry::getWebsiteId() const
 {
     return websiteId;
 }
 
-int LinkEntry::getStatus()
+size_t LinkEntry::getStatus() const
 {
     return status;
 }
 
-std::time_t LinkEntry::getLastUpdatedTime()
+std::time_t LinkEntry::getLastUpdatedTime() const
 {
     return lastUpdate;
 }
+
+
+// LinkEntry::LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate)
+//     : url{url}, status{status}, lastUpdate{lastUpdate}
+// {
+// }
+
+// LinkEntry::LinkEntry(const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
+//     : url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
+// {
+// }
+
+// LinkEntry::LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
+//     : id{id}, url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
+// {
+// }

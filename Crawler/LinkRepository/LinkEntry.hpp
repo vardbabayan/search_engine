@@ -8,22 +8,26 @@
 class LinkEntry 
 {
 public:    
-    int id;
+    size_t id;
     std::string url;
-    int websiteId;
-    int status;
+    size_t websiteId;
+    size_t status;
     std::time_t lastUpdate;
 
     LinkEntry();
-    LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate);
-    LinkEntry(int id, const std::string& url, int status, const std::time_t& lastUpdate);
-    LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate);
+    ~LinkEntry();
+    LinkEntry(const std::string& url, size_t websiteId, size_t status);
 
-    int getId();
-    std::string getUrl();
-    int getWebsiteId();
-    int getStatus();
-    std::time_t getLastUpdatedTime();
+    size_t getId() const;
+    std::string getUrl() const;
+    size_t getWebsiteId() const;
+    size_t getStatus() const;
+    std::time_t getLastUpdatedTime() const;
 };
 
 #endif
+
+
+    // LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate);
+    // LinkEntry(const std::string& url, int websiteId, int status, const std::time_t& lastUpdate);
+    // LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate);

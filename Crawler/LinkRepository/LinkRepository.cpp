@@ -7,41 +7,44 @@ LinkRepository::LinkRepository(MysqlConnector* obj)
 
 std::vector<LinkEntry> LinkRepository::getAll() const
 {
-    auto all = connector->connect<std::vector<LinkEntry> >( [](MYSQL* mysql) 
+    auto all = connector->connect<std::vector<LinkEntry> >([](MYSQL* mysql) 
     {
         MYSQL_RES* res;
         MYSQL_ROW row;
         std::vector<LinkEntry>  result;
 
-        std::string query = "select * from Links";
+        std::string query = "SELECT * FROM Links"; 
         mysql_query(mysql, query.c_str());
 
-        res = mysql_store_result(mysql);
         if(!res)
         {
-            return std::make_optional<std::vector<LinkEntry> >(NULL);
+            std::cout << "result error \n";
+            return std::make_optional<std::vector<LinkEntry> >();
         }
 
         unsigned int size =  mysql_field_count(mysql);
         
         while(row = mysql_fetch_row(res))
         {
-            unsigned int id = int(*row[0] - '0');
+            size_t id = std::stoi(row[0]);
             std::string url = row[1];
-            unsigned int websiteid = int(*row[2] - '0');
-            int status = int(*row[3] - '0');
-            std::time_t time = std::time_t(row[4]);
+            size_t websiteid = std::stoi(row[2]);
+            size_t status = std::stoi(row[3]);
             
-            result.push_back(LinkEntry(id, url, websiteid, status, time));
+            result.push_back(LinkEntry(url, websiteid, status));
         }
 
         mysql_free_result(res);
-
         return std::make_optional(result);
     });
 
     if(all.has_value())
     {
+        std::vector<LinkEntry> res = all.value();
+        for(int i = 0; i < res.size(); ++i)
+        {
+            std::cout << res[i].getUrl() << "\n";
+        }
         return all.value();
     }
 
@@ -56,53 +59,41 @@ std::vector<LinkEntry> LinkRepository::getBy(int websiteId, int status, int coun
         MYSQL_ROW row;
         std::vector<LinkEntry> links;
 
-        std::string query = "select * from Links where websiteid=" + std::to_string(websiteId);
+        std::string query = "SELECT * FROM Links WHERE websiteid=" + std::to_string(websiteId); 
         mysql_query(mysql, query.c_str());
 
         res = mysql_store_result(mysql);
         if(!res)
         {
-            return std::make_optional<std::vector<LinkEntry> >(NULL);
+            std::cout << "result error \n";
+            return std::make_optional<std::vector<LinkEntry> >();
         }
         
         while(row = mysql_fetch_row(res))
         {
-            unsigned int id = int(*row[0] - '0');
+            size_t id = std::stoi(row[0]);
             std::string url = row[1];
-            unsigned int websiteid = int(*row[2] - '0');
-            int status = int(*row[3] - '0');
-            std::time_t time = std::time_t(row[4]);
+            size_t websiteid = std::stoi(row[2]);
+            size_t status = std::stoi(row[3]);
             
-            links.push_back(LinkEntry(id, url, websiteid, status, time));
+            links.push_back(LinkEntry(url, websiteid, status));
         }
 
         mysql_free_result(res);
-
         return std::make_optional(links);
     });
 
     if(allBy.has_value())
     {
+        std::vector<LinkEntry> res = allBy.value();
+        for(int i = 0; i < res.size(); ++i)
+        {
+            std::cout << res[i].getUrl() << "\n";
+        }
         return allBy.value();
     }
 
     return std::vector<LinkEntry>();
-
-    // std::vector<LinkEntry> domainSrc;
-    // int counter = 0;
-    // for(const auto& link : source)
-    // {
-    //     if(counter == count)
-    //         break;
-
-    //     if(link.websiteId == websiteId && link.status == status)
-    //     {
-    //         domainSrc.push_back(link);
-    //         ++counter;
-    //     }
-    // }
-
-    // return domainSrc;
 }
 
 std::optional<LinkEntry> LinkRepository::getByUrl(const std::string& url) const
@@ -112,44 +103,34 @@ std::optional<LinkEntry> LinkRepository::getByUrl(const std::string& url) const
         MYSQL_RES* res;
         MYSQL_ROW row;
 
-        std::string query = "select * from Links where url=" + url;
+        std::string query = "SELECT * FROM Links WHERE url='" + url + "'";
         mysql_query(mysql, query.c_str());
 
         res = mysql_store_result(mysql);
         if(!res)
         {
-            return std::make_optional(LinkEntry());
+            std::cout << "result error\n";
+            return std::make_optional(LinkEntry{});
         }
         
         while(row = mysql_fetch_row(res))
         {
             if(row[1] == url)
             {
-                unsigned int id = int(*row[0] - '0');
+                size_t id = std::stoi(row[0]);
                 std::string url = row[1];
-                unsigned int websiteid = int(*row[2] - '0');
-                int status = int(*row[3] - '0');
-                std::time_t time = std::time_t(row[4]);
+                size_t websiteid = std::stoi(row[2]);
+                size_t status = std::stoi(row[3]);
 
-                return std::make_optional(LinkEntry(id, url, websiteid, status, time));
+                return std::make_optional(LinkEntry(url, websiteid, status));
             }
         }
 
         mysql_free_result(res);
-        return std::make_optional(LinkEntry());
+        return std::make_optional(LinkEntry{});
     });
 
     return link;
-
-    // for(const auto& link : source)
-    // {
-    //     if(link.url == url)
-    //     {
-    //         return std::make_optional(link);
-    //     }
-    // }
-
-    // return {};
 }
 
 void LinkRepository::save(LinkEntry entry)
@@ -159,23 +140,24 @@ void LinkRepository::save(LinkEntry entry)
         MYSQL_RES* res;
         MYSQL_ROW row;
 
-        //std::string query = "UPDATE Links SET status=" + std::to_string(entry.getStatus()) + " where id=" + std::to_string(entry.getId()) + " AND url=" + entry.getUrl();
-        
         std::string query = "SELECT * FROM Links";
         mysql_query(mysql, query.c_str());
         
         res = mysql_store_result(mysql);
         if(!res)
         {
+            std::cout << "result error \n";
             return nullptr;
         }
         
+        size_t id;
         bool find = false;
         while(row = mysql_fetch_row(res))
         {
-            unsigned int id = int(*row[0] - '0');
-            
-            if(id == entry.getId())
+            id = std::stoi(row[0]);
+            std::string url = row[1];
+
+            if(url == entry.getUrl())
             {
                 find = true;
                 break;
@@ -185,28 +167,31 @@ void LinkRepository::save(LinkEntry entry)
         std::string tmpquery;
         if(find)
         {
-            tmpquery = "UPDATE Links SET status=" + std::to_string(entry.getStatus()) + " where id=" + std::to_string(entry.getId()) + " AND url=" + entry.getUrl();
+            tmpquery = "UPDATE Links SET `status`=" + std::to_string(entry.getStatus()) 
+            + " WHERE url='" + entry.getUrl() + "'";
         }
         else
         {
-            tmpquery = "INSERT INTO Links(url, websiteid, `status`) values (" + entry.getUrl() + ", " + std::to_string(entry.getWebsiteId()) + ", " + std::to_string(entry.getStatus()) + ")";
+            tmpquery = "INSERT INTO Links(url, websiteid, `status`) VALUES ( '" + entry.getUrl() + "'" 
+            + ", " + std::to_string(entry.getWebsiteId()) + ", " + std::to_string(entry.getStatus()) + " )";
         }
 
         mysql_query(mysql, tmpquery.c_str());
 
-        mysql_free_result(res);
+        std::string err = mysql_error(mysql);
+        if(err.size() > 0)
+        {
+            std::cout  << "In LINKREP ERROR: " << err << "\n";
+        }
 
+        std::cout << "LINKREP IN save with query: " << query <<  "\n" << tmpquery << "\n";
+        
+        mysql_free_result(res);
         return nullptr;
     });
+}
 
-    // for(int i = 0; i < source.size(); ++i)
-    // {
-    //     if(source[i].url == entry.url)
-    //     {
-    //         source[i] = entry;
-    //         return;
-    //     }
-    // }
-
-    // source.push_back(entry);
+int LinkRepository::getSize()
+{
+    return source.size();
 }

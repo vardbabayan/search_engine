@@ -13,6 +13,11 @@ class LinkRepository
 private:
     MysqlConnector* connector;
     std::vector<LinkEntry> source;
+
+    // MYSQL_RES* selectAll(MYSQL* mysql) const;
+    // MYSQL_RES* selectByUrl(MYSQL* mysql, const std::string url) const;
+    // MYSQL_RES* selectById(MYSQL* mysql, int websiteId) const;
+    // MYSQL_RES* insertOrUpdate(MYSQL* mysql, LinkEntry entry, bool find) const;
 public:
     LinkRepository(MysqlConnector* obj);
     
@@ -36,10 +41,7 @@ public:
      */    
     void save(LinkEntry entry);
 
-    int getCounter()
-    {
-        return source.size();
-    }
+    int getSize();
 };
 
 #endif
