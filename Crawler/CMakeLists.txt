@@ -4,15 +4,6 @@ project("Crawler")
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories("PageLoader")
-include_directories("HtmlDocument")
-include_directories("LinkExtractor")
-include_directories("LinkRepository")
-include_directories("WebRepository")
-include_directories("DocumentRepository")
-include_directories("DocumentExtractor")
-include_directories("MySqlConnector")
-
 add_executable(${PROJECT_NAME} CrawlerMain.cpp)
 
 add_subdirectory(PageLoader)
@@ -22,7 +13,7 @@ add_subdirectory(LinkRepository)
 add_subdirectory(WebRepository)
 add_subdirectory(DocumentRepository)
 add_subdirectory(DocumentExtractor)
-add_subdirectory(MYSQLCPP)
+add_subdirectory(MySql)
 
 set_target_properties(PageLoader PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/PageLoader/libPageLoader.so"
@@ -37,7 +28,7 @@ set_target_properties(LinkExtractor PROPERTIES
 )
 
 set_target_properties(MySqlConnector PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MYSQLCPP/libMySqlConnector.so"
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MySql/libMySqlConnector.so"
 )
 
 set_target_properties(LinkRepository PROPERTIES

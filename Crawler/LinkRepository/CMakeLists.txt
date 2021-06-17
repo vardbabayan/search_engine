@@ -3,8 +3,8 @@ project(LinkRepository)
 add_library(
     LinkRepository SHARED
 
-    LinkRepository.hpp
-    LinkRepository.cpp
+    LinkRepositoryDB.hpp
+    LinkRepositoryDB.cpp
 
     LinkEntry.hpp
     LinkEntry.cpp

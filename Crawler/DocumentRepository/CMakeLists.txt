@@ -3,8 +3,8 @@ project(DocumentRepository)
 add_library(
     DocumentRepository SHARED
 
-    DocumentRepository.hpp
-    DocumentRepository.cpp
+    DocumentRepositoryDB.hpp
+    DocumentRepositoryDB.cpp
 
     Document.hpp
     Document.cpp

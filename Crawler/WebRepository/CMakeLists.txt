@@ -1,13 +1,13 @@
-project(WebRepository)
+project(WebRepositoryDB)
 
 add_library(
-    WebRepository SHARED
+    WebRepositoryDB SHARED
 
-    WebRepository.hpp
-    WebRepository.cpp
+    WebRepositoryDB.hpp
+    WebRepositoryDB.cpp
 
     Website.hpp
     Website.cpp
 )
 
-target_link_libraries(WebRepository)
+target_link_libraries(WebRepositoryDB)
