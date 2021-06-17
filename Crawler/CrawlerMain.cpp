@@ -1,14 +1,11 @@
 #include "PageLoader/PageLoader.hpp"
 #include "HtmlDocument/HtmlDocument.hpp"
 #include "DocumentExtractor/DocumentExtractor.hpp"
-#include "DocumentRepository/DocumentRepository.hpp"
+#include "DocumentRepository/DocumentRepositoryDB.hpp"
 #include "LinkExtractor/LinkExtractor.hpp"
-#include "LinkRepository/LinkRepository.hpp"
+#include "LinkRepository/LinkRepositoryDB.hpp"
 #include "LinkRepository/LinkStatus.hpp"
-#include "WebRepository/WebRepository.hpp"
-#include "MysqlConnector/MysqlConnector.hpp"
-
-  
+#include "WebRepository/WebRepositoryDB.hpp"
     
 const char* host = "localhost";
 const char* name = "user";
@@ -20,14 +17,14 @@ int main()
 {
     std::time_t currentTime{};
 
-    MysqlConnector* connector = new MysqlConnector(host, port, name, passwd, dbname);
-    WebRepository webrep(connector);
+    MySqlConnector connector(host, port, name, passwd, dbname);
+    WebRepositoryDB webrep(connector);
     
     //webrep.save(Website("globbing.com", "https://am.globbing.com/hy"));
     webrep.save(Website("rau.am", "https://rau.am/"));
     
-    LinkRepository linkrep(connector);
-    DocumentRepository docrep(connector);
+    LinkRepositoryDB linkrep(connector);
+    DocumentRepositoryDB docrep(connector);
     PageLoader pageLoader;
     LinkExtractor linkExtractor;
     DocumentExtractor docExtractor;
