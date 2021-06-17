@@ -1,8 +1,6 @@
 #ifndef MYSQL_CONNECTOR
 #define MYSQL_CONNECTOR
 
-//  #include "MySql.hpp"
-
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
@@ -32,28 +30,6 @@ public:
     std::string getPassword() const;
     std::string getDbName() const;
     unsigned int getPort() const;
-
-    // template <typename T>
-    // std::optional<T> connect(std::function<std::optional<T>(MySql)> function)
-    // {
-    //     MySql connector;
-
-    //     sql::Driver *driver = connector.getDriver();
-    //     sql::Connection *con = connector.getConnection();
-
-    //     /* Create a connection */
-    //     driver = get_driver_instance();
-    //     con = driver->connect("tcp://127.0.0.1:3306", username, passwd);
-        
-    //     /* Connect to the MySQL dbname database */
-    //     con->setSchema(dbname);
-
-    //     std::optional<T> result = function(connector);
-
-    //     connector.~MySql();
-        
-    //     return result;
-    // }
 };
 
 #endif
