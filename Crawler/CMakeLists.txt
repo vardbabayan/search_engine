@@ -11,7 +11,7 @@ include_directories("LinkRepository")
 include_directories("WebRepository")
 include_directories("DocumentRepository")
 include_directories("DocumentExtractor")
-include_directories("MysqlConnector")
+include_directories("MySqlConnector")
 
 add_executable(${PROJECT_NAME} CrawlerMain.cpp)
 
@@ -22,7 +22,7 @@ add_subdirectory(LinkRepository)
 add_subdirectory(WebRepository)
 add_subdirectory(DocumentRepository)
 add_subdirectory(DocumentExtractor)
-add_subdirectory(MysqlConnector)
+add_subdirectory(MYSQLCPP)
 
 set_target_properties(PageLoader PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/PageLoader/libPageLoader.so"
@@ -36,16 +36,16 @@ set_target_properties(LinkExtractor PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/LinkExtractor/libLinkExtractor.so"
 )
 
-set_target_properties(MysqlConnector PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MysqlConnector/libMysqlConnector.so"
+set_target_properties(MySqlConnector PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MYSQLCPP/libMySqlConnector.so"
 )
 
 set_target_properties(LinkRepository PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/LinkRepository/libLinkRepository.so"
 )
 
-set_target_properties(WebRepository PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/WebRepository/libWebRepository.so"
+set_target_properties(WebRepositoryDB PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/WebRepository/libWebRepositoryDB.so"
 )
 
 set_target_properties(DocumentRepository PROPERTIES
@@ -56,8 +56,5 @@ set_target_properties(DocumentExtractor PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DocumentExtractor/libDocumentExtractor.so"
 )
 
-# target_link_libraries("lib" -lmysqlclient -lmysqlpp)
-# target_compile_options("lib" PUBLIC -I/usr/include/mysql)
-
-target_link_libraries(${PROJECT_NAME} PageLoader HtmlDocument LinkExtractor MysqlConnector LinkRepository 
-                                      WebRepository DocumentExtractor DocumentRepository)
+target_link_libraries(${PROJECT_NAME} PageLoader HtmlDocument LinkExtractor MySqlConnector LinkRepository 
+                                      WebRepositoryDB DocumentExtractor DocumentRepository)
