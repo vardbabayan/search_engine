@@ -15,7 +15,6 @@ std::vector<Website> WebRepositoryDB::getAll()
         sql::ResultSet *res;
         
         /* Create a connection */
-
         driver = get_driver_instance();
         con = driver->connect("tcp://127.0.0.1:3306", connector.getName(), connector.getPassword());
         
@@ -27,9 +26,9 @@ std::vector<Website> WebRepositoryDB::getAll()
         stmt = con->createStatement();
         res = stmt->executeQuery("SELECT * FROM Websites");
         
-        while (res->next()) 
+        while (res->next())  
         {
-            int id = res->getInt(1); // getInt(1) returns the first column
+            int id = res->getInt(1);
             std::string domain = res->getString(2).asStdString();
             std::string homepage = res->getString(3).asStdString();
             
@@ -64,9 +63,7 @@ void WebRepositoryDB::save(const Website& website)
     {
         sql::Driver* driver;
         sql::Connection* con;
-        sql::Statement* stmt;
         sql::PreparedStatement* pstmt;
-        sql::ResultSet* res;          
 
         /* Create a connection */
         driver = get_driver_instance();
@@ -75,50 +72,14 @@ void WebRepositoryDB::save(const Website& website)
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
 
-        stmt = con->createStatement();
-        res = stmt->executeQuery("SELECT * FROM Websites");
+        pstmt = con->prepareStatement("INSERT INTO Websites(domain, homepage) VALUES(?, ?) ON DUPLICATE KEY UPDATE updated = CURRENT_TIMESTAMP()");            
         
-        bool find = false;
-        int id;
-        while (res->next()) 
-        {
-            id = res->getInt(1); // getInt(1) returns the first column
-            std::string domain = res->getString(2).asStdString();
-            std::string homepage = res->getString(3).asStdString();
-            
-            if(domain == website.getDomain())
-            {
-                std::cout << "found " << domain << " "  << website.getDomain() << "\n"; 
-                find = true;
-                break;
-            }
-        }
+        pstmt->setString(1, website.getDomain());
+        pstmt->setString(2, website.getHomePage());
+        pstmt->executeQuery();
 
-
-        if(find)
-        {
-            pstmt = con->prepareStatement("UPDATE Websites SET domain=(?) WHERE id=(?)");            
-            pstmt->setString(1, website.getDomain());
-            pstmt->setInt(2, id);
-
-            pstmt->executeQuery();
-        }
-        else
-        {
-            pstmt = con->prepareStatement("INSERT INTO Websites(domain, homepage) VALUES (?, ?)");
-            pstmt->setString(1, website.getDomain());
-            pstmt->setString(2, website.getHomePage());
-            
-            pstmt->executeQuery();
-
-            std::cout << "website saved\n";
-            source.push_back(website);
-        }
-
-        delete stmt;
         delete pstmt;
         delete con;
-        delete res;
     }  
     catch (sql::SQLException &e) 
     {
