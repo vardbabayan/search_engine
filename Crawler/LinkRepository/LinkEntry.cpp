@@ -39,19 +39,3 @@ std::time_t LinkEntry::getLastUpdatedTime() const
 {
     return lastUpdate;
 }
-
-
-// LinkEntry::LinkEntry(const std::string& url, int status, const std::time_t& lastUpdate)
-//     : url{url}, status{status}, lastUpdate{lastUpdate}
-// {
-// }
-
-// LinkEntry::LinkEntry(const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
-//     : url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
-// {
-// }
-
-// LinkEntry::LinkEntry(int id, const std::string& url, int websiteId, int status, const std::time_t& lastUpdate)
-//     : id{id}, url{url}, websiteId{websiteId}, status{status}, lastUpdate{lastUpdate}
-// {
-// }

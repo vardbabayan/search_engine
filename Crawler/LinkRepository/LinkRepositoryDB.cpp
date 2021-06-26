@@ -27,8 +27,6 @@ std::vector<LinkEntry> LinkRepositoryDB::getAll()
         
         while (res->next()) 
         {
-            // int id = res->getInt(1); // getInt(1) returns the first column
-            
             std::string url = res->getString(2).asStdString();
             size_t websiteId = res->getInt(3);
             size_t status = res->getInt(4);
@@ -75,24 +73,17 @@ std::vector<LinkEntry> LinkRepositoryDB::getBy(size_t websiteId, size_t status, 
 
         std::vector<LinkEntry> links;
         
-        pstmt = con->prepareStatement("SELECT * FROM Links WHERE websiteid=(?)");     
-        pstmt->setInt(1, websiteId);
+        pstmt = con->prepareStatement("SELECT * FROM Links WHERE websiteid=(?) LIMIT (?)");     
+        pstmt->setUInt(1, websiteId);
+        pstmt->setUInt(2, count);
         res = pstmt->executeQuery();       
         
-        while (res->next() && count > 0) 
-        {
-            // int id = res->getInt(1); // getInt(1) returns the first column
-            
+        while (res->next()) 
+        {            
             std::string url = res->getString(2).asStdString();
             size_t findWebsiteId = res->getInt(3);
             size_t status = res->getInt(4);
-
-            if(findWebsiteId == websiteId) 
-            {
-                links.push_back(LinkEntry(url, websiteId, status));
-            }
-
-            --count;
+            links.push_back(LinkEntry(url, websiteId, status));
         }
 
         delete con;
@@ -136,20 +127,12 @@ std::optional<LinkEntry> LinkRepositoryDB::getByUrl(const std::string& url) cons
         pstmt->setString(1, url);
         res = pstmt->executeQuery();       
         
-        while (res->next()) 
+        if(res->next()) 
         {
-            // int id = res->getInt(1); // getInt(1) returns the first column
-            
             std::string findUrl = res->getString(2).asStdString();
-
-           
-            if(url == findUrl) 
-            {
-                size_t websiteId = res->getInt(3);
-                size_t status = res->getInt(4);
-
-                ans = LinkEntry(url, websiteId, status);
-            }
+            size_t websiteId = res->getInt(3);
+            size_t status = res->getInt(4);
+            ans = LinkEntry(url, websiteId, status);
         }
 
         delete con;
@@ -172,13 +155,12 @@ std::optional<LinkEntry> LinkRepositoryDB::getByUrl(const std::string& url) cons
     return {};
 }
 
-void LinkRepositoryDB::save(LinkEntry entry)
+void LinkRepositoryDB::save(const LinkEntry& entry)
 {
     try 
     {
         sql::Driver* driver;
         sql::Connection* con;
-        sql::Statement* stmt;
         sql::ResultSet* res;
         sql::PreparedStatement* pstmt;
 
@@ -189,44 +171,13 @@ void LinkRepositoryDB::save(LinkEntry entry)
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
 
-        stmt = con->createStatement();
-        res = stmt->executeQuery("SELECT * FROM Links");
-        
-        bool find = false;
-        int id;
-        while (res->next()) 
-        {
-            id = res->getInt(1); // getInt(1) returns the first column
-            std::string url = res->getString(2).asStdString();
-            size_t websiteId = res->getInt(3);
-            
-            if(entry.getUrl() == url)
-            {
-                find = true;
-                break;
-            }
-        }
+        pstmt = con->prepareStatement("REPLACE INTO Links(url, websiteid, `status`) VALUES(?, ?, ?");     
+        pstmt->setString(1, entry.getUrl());
+        pstmt->setInt(2, entry.getWebsiteId());
+        pstmt->setUInt(3, entry.getStatus());
 
-        if(find)
-        {
-            pstmt = con->prepareStatement("UPDATE Links SET `status`=(?) WHERE url=(?)");            
-            pstmt->setInt(1, entry.getStatus());
-            pstmt->setString(2, entry.getUrl());
-            pstmt->executeQuery();
-        }
-        else
-        {
-            pstmt = con->prepareStatement("INSERT INTO Links(url, websiteid, `status`) VALUES (?, ?, ?)");
-            pstmt->setString(1, entry.getUrl());
-            pstmt->setInt(2, entry.getWebsiteId());
-            pstmt->setInt(3, entry.getStatus());
-            pstmt->executeQuery();
+        source.push_back(entry);
 
-            std::cout << "link saved\n";
-            source.push_back(entry);
-        }
-
-        delete stmt;
         delete pstmt;
         delete con;
         delete res;

@@ -35,7 +35,7 @@ public:
     /**
      * save Link to the source
      */    
-    void save(LinkEntry entry);
+    void save(const LinkEntry& entry);
 
     int getSize();
 };
