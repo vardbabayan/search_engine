@@ -1,12 +1,11 @@
 #include "PageLoader/PageLoader.hpp"
 #include "HtmlDocument/HtmlDocument.hpp"
 #include "DocumentExtractor/DocumentExtractor.hpp"
-#include "DocumentRepository/DocumentRepositoryDB.hpp"
 #include "LinkExtractor/LinkExtractor.hpp"
-#include "LinkRepository/LinkRepositoryDB.hpp"
-#include "LinkRepository/LinkStatus.hpp"
-#include "WebRepository/WebRepositoryDB.hpp"
-    
+#include "Repositories/LinkRepository/LinkRepositoryDB.hpp"
+#include "Repositories/LinkRepository/LinkStatus.hpp"
+#include "Repositories/WebRepository/WebRepositoryDB.hpp"
+#include "Repositories/DocumentRepository/DocumentRepositoryDB.hpp"
 
 int main()
 {
@@ -39,6 +38,7 @@ int main()
 
             if(links.empty()) 
             {
+                std::cout << "break\n";
                 break;
             }
 
@@ -63,17 +63,19 @@ int main()
                 doc.parse();
                 
                 auto extractedLinks = linkExtractor.extract(doc);
-                std::vector<std::pair<std::string, std::string> >  newDomains = linkExtractor.checkByDomain(extractedLinks, website.getDomain());
+                std::vector<std::pair<std::string, std::string> >  newDomains = linkExtractor.parse_url(extractedLinks, website.getDomain());
                 
                 // save new Domains
-                for(auto& newDomain : newDomains)
+                for(auto& newDomain : newDomains) 
+                {
+                    std::cout << "newDomain: " << newDomain.first << "\n";
                     webrep.save(Website(newDomain.first, newDomain.second));
+                }
 
                 for(auto& newLink : extractedLinks)
                 {
                     if(linkrep.getByUrl(newLink).value().getUrl() != "")
                     {
-                        // std::cout << "already exists\n";
                         continue;
                     }
                     linkrep.save(LinkEntry(newLink, website.getId(), int(LinkStatus::WAITING)));

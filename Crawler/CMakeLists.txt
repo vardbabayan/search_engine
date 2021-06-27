@@ -9,11 +9,11 @@ add_executable(${PROJECT_NAME} CrawlerMain.cpp)
 add_subdirectory(PageLoader)
 add_subdirectory(HtmlDocument)
 add_subdirectory(LinkExtractor)
-add_subdirectory(LinkRepository)
-add_subdirectory(WebRepository)
-add_subdirectory(DocumentRepository)
+add_subdirectory(Repositories/LinkRepository)
+add_subdirectory(Repositories/WebRepository)
+add_subdirectory(Repositories/DocumentRepository)
 add_subdirectory(DocumentExtractor)
-add_subdirectory(MySql)
+add_subdirectory(MySqlConnector)
 
 set_target_properties(PageLoader PROPERTIES
   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/PageLoader/libPageLoader.so"
@@ -28,19 +28,19 @@ set_target_properties(LinkExtractor PROPERTIES
 )
 
 set_target_properties(MySqlConnector PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MySql/libMySqlConnector.so"
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/MySqlСonnector/libMySqlConnector.so"
 )
 
 set_target_properties(LinkRepository PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/LinkRepository/libLinkRepository.so"
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/Repositories/LinkRepository/libLinkRepository.so"
 )
 
 set_target_properties(WebRepositoryDB PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/WebRepository/libWebRepositoryDB.so"
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/Repositories/WebRepository/libWebRepositoryDB.so"
 )
 
 set_target_properties(DocumentRepository PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DocumentRepository/libDocumentRepository.so"
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/Repositories/DocumentRepository/libDocumentRepository.so"
 )
 
 set_target_properties(DocumentExtractor PROPERTIES
