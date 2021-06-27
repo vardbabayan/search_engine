@@ -7,27 +7,27 @@
 #include "LinkRepository/LinkStatus.hpp"
 #include "WebRepository/WebRepositoryDB.hpp"
     
-const char* host = "localhost";
-const char* name = "user";
-const char* passwd = "password";
-const char* dbname = "db_crawler";
-unsigned int port = 3306;
 
 int main()
 {
     std::time_t currentTime{};
 
+    std::string host = "localhost";
+    std::string name = "user";
+    std::string passwd = "password";
+    std::string dbname = "db_crawler";
+    unsigned int port = 3306;
+
     MySqlConnector connector(host, port, name, passwd, dbname);
+    
     WebRepositoryDB webrep(connector);
-    
-    //webrep.save(Website("globbing.com", "https://am.globbing.com/hy"));
-    webrep.save(Website("rau.am", "https://rau.am/"));
-    
     LinkRepositoryDB linkrep(connector);
     DocumentRepositoryDB docrep(connector);
     PageLoader pageLoader;
     LinkExtractor linkExtractor;
     DocumentExtractor docExtractor;
+
+    webrep.save(Website("rau.am", "https://rau.am/"));
 
     for(auto& website : webrep.getAll())
     {
