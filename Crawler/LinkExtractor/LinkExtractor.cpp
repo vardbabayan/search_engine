@@ -19,37 +19,67 @@ std::vector<std::string> LinkExtractor::extract(HtmlDocument& doc)
     return links;
 }
 
-std::vector<std::pair<std::string, std::string> > LinkExtractor::checkByDomain(std::vector<std::string>& links, const std::string& domain)
+std::string LinkExtractor::trim(const std::string& str)
 {
-    std::vector<std::pair<std::string, std::string> >  newDomains;
-    for(auto& link : links)
-    { 
-        boost::regex ex("(http|https)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
-        boost::cmatch what;
-        
-        if(regex_match(link.c_str(), what, ex)) 
-        {
-            // std::string protocol = std::string(what[1].first, what[1].second);
-            
-            std::string currentDomain   = std::string(what[2].first, what[2].second);
-            
-            // std::string port     = std::string(what[3].first, what[3].second);
-            // std::string path     = std::string(what[4].first, what[4].second);
-            // std::string query    = std::string(what[5].first, what[5].second);
+    size_t start = str.find_first_not_of(" \n\r\t");
+    size_t until = str.find_last_not_of(" \n\r\t");
+    std::string::const_iterator i = start == std::string::npos ? str.begin() : str.begin() + start;
+    std::string::const_iterator x = until == std::string::npos ? str.end()   : str.begin() + until+1;
+    
+    return std::string(i,x);
+}
+ 
+std::pair<std::string, std::string> LinkExtractor::check_url(const std::string& url) 
+{
+    std::string path, domain, x, protocol, port, query;
+    int offset = 0;
+    size_t pos1,pos2,pos3,pos4;
 
-            if(currentDomain != domain)
-            {                
-                newDomains.push_back(std::make_pair(domain, link));
-                std::cout << "[" << link << "]" << std::endl;
-                std::cout << currentDomain << std::endl;
+    x = trim(url);
+
+    offset = offset==0 && x.compare(0, 8, "https://")==0 ? 8 : offset;
+    offset = offset==0 && x.compare(0, 7, "http://" )==0 ? 7 : offset;
+
+    pos1 = x.find_first_of('/', offset+1 );
+    
+    path = pos1==std::string::npos ? "" : x.substr(pos1);
+    
+    domain = std::string( x.begin()+offset, pos1 != std::string::npos ? x.begin()+pos1 : x.end() );
+    
+    path = (pos2 = path.find("#")) != std::string::npos ? path.substr(0,pos2) : path;
+    
+    port = (pos3 = domain.find(":")) != std::string::npos ? domain.substr(pos3+1) : "";
+    
+    domain = domain.substr(0, pos3 != std::string::npos ? pos3 : domain.length());
+    
+    protocol = offset > 0 ? x.substr(0,offset-3) : "";
+    
+    query = (pos4 = path.find("?")) !=std::string::npos ? path.substr(pos4+1) : "";
+    
+    path = pos4 != std::string::npos ? path.substr(0,pos4) : path;
+
+    return std::make_pair(protocol, domain);
+}
+
+std::vector<std::pair<std::string, std::string> > LinkExtractor::parse_url(std::vector<std::string>& links, const std::string& currentDomain)
+{
+    std::vector<std::pair<std::string, std::string> > result;
+    
+    for(auto& link : links) 
+    {
+        if(link[0] == '/' || link.size() < 4)
+            continue;
+
+        auto res = check_url(link);
+        if(res.first == "https" || res.first == "http") 
+        {
+            if(res.second != currentDomain) 
+            {   
+                result.push_back(std::make_pair(res.second, link));
                 std::remove(links.begin(), links.end(), link);
             }
-
-            // std::cout << protocol << std::endl;
-            // std::cout << port << std::endl;
-            // std::cout << path << std::endl;
-            // std::cout << query << std::endl;
         }
     }
-    return newDomains;
+    
+    return result;
 }
