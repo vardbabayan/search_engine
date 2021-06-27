@@ -31,15 +31,18 @@ std::vector<LinkEntry> LinkRepositoryDB::getAll()
             size_t websiteId = res->getInt(3);
             size_t status = res->getInt(4);
 
-            result.push_back(LinkEntry(url, websiteId, status));
+            this->source.push_back(LinkEntry(url, websiteId, status));
         }
+
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
 
         delete con;
         delete stmt;
         delete res;
         
-        this->source = result;
-        return result;
+        return this->source;
     } 
     catch (sql::SQLException &e) 
     {
@@ -73,10 +76,10 @@ std::vector<LinkEntry> LinkRepositoryDB::getBy(size_t websiteId, size_t status, 
 
         std::vector<LinkEntry> links;
         
-        pstmt = con->prepareStatement("SELECT * FROM Links WHERE websiteid=(?) LIMIT (?)");     
+        pstmt = con->prepareStatement("SELECT * FROM Links WHERE websiteid=(?) LIMIT ?");
         pstmt->setUInt(1, websiteId);
         pstmt->setUInt(2, count);
-        res = pstmt->executeQuery();       
+        res = pstmt->executeQuery();
         
         while (res->next()) 
         {            
@@ -85,6 +88,10 @@ std::vector<LinkEntry> LinkRepositoryDB::getBy(size_t websiteId, size_t status, 
             size_t status = res->getInt(4);
             links.push_back(LinkEntry(url, websiteId, status));
         }
+        
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
 
         delete con;
         delete pstmt;
@@ -135,6 +142,10 @@ std::optional<LinkEntry> LinkRepositoryDB::getByUrl(const std::string& url) cons
             ans = LinkEntry(url, websiteId, status);
         }
 
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
+        
         delete con;
         delete pstmt;
         delete res;
@@ -157,11 +168,10 @@ std::optional<LinkEntry> LinkRepositoryDB::getByUrl(const std::string& url) cons
 
 void LinkRepositoryDB::save(const LinkEntry& entry)
 {
-    try 
+    try
     {
         sql::Driver* driver;
         sql::Connection* con;
-        sql::ResultSet* res;
         sql::PreparedStatement* pstmt;
 
          /* Create a connection */
@@ -171,16 +181,22 @@ void LinkRepositoryDB::save(const LinkEntry& entry)
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
 
-        pstmt = con->prepareStatement("REPLACE INTO Links(url, websiteid, `status`) VALUES(?, ?, ?");     
+        //pstmt = con->prepareStatement("INSERT INTO Links(url, websiteid, `status`) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE `status` = ?, updated = CURRENT_TIMESTAMP()");     
+        pstmt = con->prepareStatement("REPLACE INTO Links(url, websiteid, `status`) VALUES(?, ?, ?)");     
         pstmt->setString(1, entry.getUrl());
-        pstmt->setInt(2, entry.getWebsiteId());
+        pstmt->setUInt(2, entry.getWebsiteId());
         pstmt->setUInt(3, entry.getStatus());
+        //pstmt->setUInt(4, entry.getStatus());
 
+        pstmt->executeQuery();
         source.push_back(entry);
 
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
+        
         delete pstmt;
         delete con;
-        delete res;
     }  
     catch (sql::SQLException &e) 
     {

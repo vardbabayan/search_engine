@@ -1,7 +1,7 @@
 #ifndef DOCUMENT_REPOSITORY_DB
 #define DOCUMENT_REPOSITORY_DB
 
-#include "../MySqlConnector/MySqlConnector.hpp"
+#include "../../MySqlConnector/MySqlConnector.hpp"
 #include "Document.hpp"
 #include <vector>
 

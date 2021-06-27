@@ -21,8 +21,6 @@ std::vector<Website> WebRepositoryDB::getAll()
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
         
-        std::vector<Website> result;
-        
         stmt = con->createStatement();
         res = stmt->executeQuery("SELECT * FROM Websites");
         
@@ -32,15 +30,17 @@ std::vector<Website> WebRepositoryDB::getAll()
             std::string domain = res->getString(2).asStdString();
             std::string homepage = res->getString(3).asStdString();
             
-            result.push_back(Website(id, domain, homepage));
+            this->source.push_back(Website(id, domain, homepage));
         }
+        
+        driver->threadEnd();
+        con->close();
 
         delete con;
         delete stmt;
         delete res;
 
-        this->source = result;
-        return result;
+        return this->source;
     } 
     catch (sql::SQLException &e) 
     {
@@ -58,7 +58,6 @@ std::vector<Website> WebRepositoryDB::getAll()
 
 void WebRepositoryDB::save(const Website& website)
 {
-    std::cout << website.getDomain() << " " << website.getHomePage() << "\n";
     try 
     {
         sql::Driver* driver;
@@ -72,15 +71,17 @@ void WebRepositoryDB::save(const Website& website)
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
 
-        pstmt = con->prepareStatement("INSERT INTO Websites(domain, homepage) VALUES(?, ?) ON DUPLICATE KEY UPDATE updated = CURRENT_TIMESTAMP()");            
-        
+        pstmt = con->prepareStatement("INSERT INTO Websites(domain, homepage) VALUES(?, ?) ON DUPLICATE KEY UPDATE updated = CURRENT_TIMESTAMP()");        
         pstmt->setString(1, website.getDomain());
         pstmt->setString(2, website.getHomePage());
         pstmt->executeQuery();
+        
+        driver->threadEnd();
+        con->close();
 
         delete pstmt;
         delete con;
-    }  
+    }
     catch (sql::SQLException &e) 
     {
         std::cout << "# ERR: SQLException in " << __FILE__;

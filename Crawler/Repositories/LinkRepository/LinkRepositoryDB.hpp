@@ -1,7 +1,7 @@
 #ifndef LINK_REPOSITORY_DB
 #define LINK_REPOSITORY_DB
 
-#include "../MySqlConnector/MySqlConnector.hpp"
+#include "../../MySqlConnector/MySqlConnector.hpp"
 
 #include "LinkEntry.hpp"
 #include <vector>

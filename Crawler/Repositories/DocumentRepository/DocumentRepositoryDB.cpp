@@ -21,7 +21,6 @@ std::vector<Document> DocumentRepositoryDB::getAll()
         /* Connect to the MySQL dbname database */
         con->setSchema(connector.getDbName());
         
-        std::vector<Document> result;
         stmt = con->createStatement();
         res = stmt->executeQuery("SELECT * FROM Documents");
         
@@ -32,15 +31,18 @@ std::vector<Document> DocumentRepositoryDB::getAll()
             std::string description = res->getString(4).asStdString();
             std::string text = res->getString(5).asStdString();
 
-            result.push_back(Document(url, title, description, text));
+            this->docSource.push_back(Document(url, title, description, text));
         }
 
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
+        
         delete con;
         delete stmt;
         delete res;
 
-        this->docSource = result;
-        return result;
+        return this->docSource;
     } 
     catch (sql::SQLException &e) 
     {
@@ -88,6 +90,10 @@ std::optional<Document> DocumentRepositoryDB::getByUrl(const std::string& url) c
             doc = Document(url, title, description, text);
         }
 
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
+        
         delete con;
         delete pstmt;
         delete res;
@@ -112,7 +118,6 @@ std::optional<Document> DocumentRepositoryDB::getByUrl(const std::string& url) c
     {
         sql::Driver* driver;
         sql::Connection* con;
-        sql::ResultSet* res;
         sql::PreparedStatement* pstmt;
 
         /* Create a connection */
@@ -127,10 +132,14 @@ std::optional<Document> DocumentRepositoryDB::getByUrl(const std::string& url) c
         pstmt->setString(2, doc.getTitle());
         pstmt->setString(3, doc.getDescription());
         pstmt->setString(4, doc.getText());
+        pstmt->executeQuery();
 
+        /* Disconnectig */
+        driver->threadEnd();
+        con->close();
+        
         delete pstmt;
         delete con;
-        delete res;
     }
     catch (sql::SQLException &e) 
     {
