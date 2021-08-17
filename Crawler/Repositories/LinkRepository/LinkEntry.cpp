@@ -5,11 +5,6 @@ LinkEntry::LinkEntry()
 {
 }
 
-LinkEntry::~LinkEntry()
-{
-}
-
-
 LinkEntry::LinkEntry(const std::string& url, size_t websiteId, size_t status)
     : url{url}, websiteId{websiteId}, status{status}
 {

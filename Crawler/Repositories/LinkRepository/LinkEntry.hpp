@@ -15,7 +15,6 @@ public:
     std::time_t lastUpdate;
 
     LinkEntry();
-    ~LinkEntry();
     LinkEntry(const std::string& url, size_t websiteId, size_t status);
 
     size_t getId() const;
