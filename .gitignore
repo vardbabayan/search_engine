@@ -1,9 +1,4 @@
 .vscode/
 build/
 .idea/
-1.cpp
 Crawler/
-Crawler*
-Search/
-lastSearch/
-mysearch/
