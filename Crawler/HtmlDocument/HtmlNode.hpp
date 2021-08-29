@@ -7,14 +7,16 @@ class HtmlNode
 {
 protected:
     /**
-     * node to represent each node in htmlTree
+     * node is representing part of HTML Tree
      */
     GumboNode* node;
 public:
-    HtmlNode(GumboNode* node);
+    explicit HtmlNode(GumboNode* node);
 
-    // check is GumboNodeElement or not
-    virtual bool isElement();
+    /**
+     * check is node Element in the HTML Tree or not
+     */
+    virtual bool isElement() const;
 };
 
 #endif
