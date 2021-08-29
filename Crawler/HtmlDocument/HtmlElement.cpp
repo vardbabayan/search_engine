@@ -61,9 +61,9 @@ std::string HtmlElement::getInnerText() const
     std::string result = "";
 
     GumboVector* children = &node->v.element.children;
-    unsigned int children_length = children->length;
+    unsigned int size = children->length;
 
-    for (unsigned int i = 0; i < children_length; ++i)
+    for (unsigned int i = 0; i < size; ++i)
     {
         auto child = static_cast<GumboNode*>(children->data[i]);
 
