@@ -11,9 +11,11 @@ private:
      */
     static size_t writeFunction(char *ptr, size_t size, size_t nmemb, void* data);
 public:
-    PageLoader() = default;
+    explicit PageLoader() = default;
 
-    // load html code for current url
+    /**
+     * loading html code from the page according to current url
+     */
     LoadResult loadURL(const std::string& url);
 };
 

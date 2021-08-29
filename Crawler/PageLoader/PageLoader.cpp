@@ -1,7 +1,6 @@
 #include "PageLoader.hpp"
 
 #include <curl/curl.h>
-#include <iostream>
 #include <cerrno>
 
 size_t PageLoader::writeFunction(char *ptr, size_t size, size_t nmemb, void* data) 
@@ -31,9 +30,9 @@ LoadResult PageLoader::loadURL(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)response_body);
     
-    /* Perform the request, result will get the return code */ 
+    /* Perform request, result will get a return code */
     result = curl_easy_perform(curl);    
-    if(result != CURLE_OK || result == CURLE_TOO_MANY_REDIRECTS)
+    if(result != CURLE_OK)
     {
         std::cerr << "perform problem\n";
         return LoadResult(nullptr, false);
@@ -42,6 +41,5 @@ LoadResult PageLoader::loadURL(const std::string& url)
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_status);
     curl_easy_cleanup(curl);
 
-    std::cout << "status: " << response_status << "\n";
     return LoadResult(std::shared_ptr<std::string>(response_body), response_status);
 }
