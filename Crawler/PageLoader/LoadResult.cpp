@@ -1,19 +1,19 @@
 #include "LoadResult.hpp"
 
-LoadResult::LoadResult() {}
+explicit LoadResult::LoadResult() {}
 
-LoadResult::LoadResult(std::shared_ptr<std::string> body, int status)
+explicit LoadResult::LoadResult(std::shared_ptr<std::string> body, int status)
 {
     this->body = body;
     this->status = status;
 }
 
-std::shared_ptr<std::string> LoadResult::getBody()
+std::shared_ptr<std::string> LoadResult::getBody() const
 {
-    return body;
+    return this->body;
 }
 
-int LoadResult::getStatus()
+int LoadResult::getStatus() const
 {
-    return status;
+    return this->status;
 }

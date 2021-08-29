@@ -19,15 +19,19 @@ private:
     int status;
 
 public:
-    LoadResult();
+    explicit LoadResult();
     
-    LoadResult(std::shared_ptr<std::string> body, int status);
+    explicit LoadResult(std::shared_ptr<std::string> body, int status);
 
-    // return html code represented in string
-    std::shared_ptr<std::string> getBody();
+    /**
+     * return html code of the page
+     */
+    std::shared_ptr<std::string> getBody() const;
 
-    // return responce status 
-    int getStatus();
+    /** 
+     * return response status after request
+     */
+    int getStatus() const;
 };
 
 #endif
