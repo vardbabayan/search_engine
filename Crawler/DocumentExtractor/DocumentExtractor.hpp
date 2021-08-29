@@ -7,7 +7,8 @@
 class DocumentExtractor
 {
 public:
-       DocumentInfo extractInfo(HtmlDocument& doc);
+    DocumentExtractor() = default;
+    DocumentInfo extractInfo(HtmlDocument& doc);
 };
 
 #endif
