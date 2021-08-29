@@ -9,30 +9,36 @@ class HtmlDocument
 {
 private:
     /**
-     * Stores output to traverse on tree from root
+     * Stores output to traverse on Tree starting from root
      */
     GumboOutput* output;
 
     /**
      * Document for current url
      */  
-    std::string html;
+    std::string html_code;
 
     /**
-     * Visit all Nodes in tree from root
+     * Visit all Nodes in Tree from root
      */
     void visitElement(GumboNode* node, std::function<void(HtmlElement)> visitor);
 
 public:
-    HtmlDocument(const std::string& html);
+    explicit HtmlDocument(const std::string& html);
 
-    // parse html to tree
+    /**
+     * parse HTML code to HTML Tree
+     */
     bool parse();
 
-    // call it to visit all vertexes
+    /**
+     * visit all vertexes in the HTML Tree
+     */
     void visitElements(std::function<void(HtmlElement)> visitor);
 
-    // free memory that allocated for GumboOutput* output
+    /**
+     * delete memory that allocated for GumboOutput* output
+     */
     ~HtmlDocument();
 };
 
