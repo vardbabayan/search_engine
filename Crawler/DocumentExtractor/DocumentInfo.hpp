@@ -11,12 +11,12 @@ private:
     std::string text;
 
 public:
-    DocumentInfo();
-    DocumentInfo(const std::string& title, const std::string& description, const std::string& text);
+    explicit DocumentInfo();
+    explicit DocumentInfo(const std::string& title, const std::string& description, const std::string& text);
 
-    std::string getTitle();
-    std::string getDescription();
-    std::string getText();
+    std::string getTitle() const;
+    std::string getDescription() const;
+    std::string getText() const;
 };
 
 #endif
