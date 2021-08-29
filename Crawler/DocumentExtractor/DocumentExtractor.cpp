@@ -8,9 +8,7 @@ DocumentInfo DocumentExtractor::extractInfo(HtmlDocument& doc)
     doc.visitElements([&text, &title, &description](HtmlElement elem)
     { 
         if(!elem.isTagsForText())
-        {
             return;
-        }
 
         if(elem.isTagTitle())
         {
