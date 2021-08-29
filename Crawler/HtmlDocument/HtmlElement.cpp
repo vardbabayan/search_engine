@@ -1,10 +1,10 @@
 #include "HtmlElement.hpp"
 
-HtmlElement::HtmlElement(GumboNode* node) : HtmlNode(node)
+explicit HtmlElement::HtmlElement(GumboNode* node) : HtmlNode(node)
 {
 }
 
-bool HtmlElement::isElement()
+bool HtmlElement::isElement() const override
 {
    return true;
 }
@@ -47,7 +47,7 @@ bool HtmlElement::isTagForDescription() const
     return true;
 }
 
-std::string HtmlElement::getAttribute(const std::string& name)
+std::string HtmlElement::getAttribute(const std::string& name) const
 {
     GumboAttribute* attribute = gumbo_get_attribute(&node->v.element.attributes, name.c_str());
     if(!attribute)
@@ -56,19 +56,19 @@ std::string HtmlElement::getAttribute(const std::string& name)
     return std::string{attribute->value};
 }
 
-std::string HtmlElement::getInnerText()
+std::string HtmlElement::getInnerText() const
 {
     std::string result = "";
 
     GumboVector* children = &node->v.element.children;
-    for (unsigned int i = 0; i < children->length; ++i) 
+    unsigned int children_length = children->length;
+
+    for (unsigned int i = 0; i < children_length; ++i)
     {
         auto child = static_cast<GumboNode*>(children->data[i]);
 
         if(child->type != GUMBO_NODE_TEXT)
-        {
             continue;
-        }
        
         result.append(child->v.text.text);
     }

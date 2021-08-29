@@ -2,18 +2,17 @@
 #define HTML_ELEMENT
 
 #include "HtmlNode.hpp"
-
 #include <string>
 
-class HtmlElement : HtmlNode
+class HtmlElement : public HtmlNode
 {
 public:
-    HtmlElement(GumboNode* node);
+    explicit HtmlElement(GumboNode* node);
 
     /**
      * always true
      */
-    bool isElement() override;
+    bool isElement() const override;
 
     /**
      * check is <a> or not
@@ -36,14 +35,14 @@ public:
     bool isTagForDescription() const;
 
     /**
-     * if tag contains attribute then take it
+     * if tag contains an attribute, then take it
      */
-    std::string getAttribute(const std::string& name);
+    std::string getAttribute(const std::string& name) const;
 
     /**
      * get text from current element
      */
-    std::string getInnerText();
+    std::string getInnerText() const;
 };
 
 #endif
